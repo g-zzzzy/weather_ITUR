@@ -6,9 +6,9 @@ import pandas as pd
 from glob import glob
 import argparse
 import os
-from constant import *
 import threading
 from datetime import datetime
+from weather import constant
 
 def check_int(value):
     ivalue = int(value)
@@ -41,7 +41,7 @@ def get_weather(folder_path, timestamp, lat, lon):
 def get_weather_init(specific_date, timestamp, lat, lon):
     specific_date = datetime.strptime(specific_date, '%Y-%m-%d')
     date_str = specific_date.strftime('%Y-%m-%d')
-    folder_path = f'{save_dir}/{date_str}'
+    folder_path = f'{constant.save_dir}/{date_str}'
 
     if os.path.exists(folder_path):
         # print("downloaded")

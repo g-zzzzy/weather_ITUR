@@ -11,7 +11,7 @@ lon=139                # Example: longitude
 
 
 
-python3 ../weather_itur/calculate.py "$specific_day" "$timestamp" "$lat" "$lon"
+python3 ../calculate.py "$specific_day" "$timestamp" "$lat" "$lon"
 
 end_time=$(date +%s)
 
