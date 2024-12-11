@@ -8,7 +8,10 @@ import argparse
 import os
 import threading
 from weather import get_weather
+from nodes import get_satellite
+from nodes import get_station
 import itur
+from astropy import units as u
 
 def check_int(value):
     ivalue = int(value)
@@ -21,39 +24,43 @@ def check_int(value):
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    
+
+    # step 1: set date and time
     parser.add_argument('specific_day', type=str)
     parser.add_argument('timestamp', type=check_int)
-    parser.add_argument('lat', type=float)
-    parser.add_argument('lon', type=float)
-    # parser.add_argument('sat_num', type=int)
-    # parser.add_argument('station_num', type=int)
     
     args = parser.parse_args()
     specific_date = args.specific_day
     timestamp = args.timestamp
-    lat = args.lat
-    lon = args.lon
-    # sat_num = args.sat_num
-    # station_num = args.station_num
 
-    # weather index of specific date at specific (lat, lon, timestamp)
-    # timestamp : 0, 1, 2, 3
+ 
+    # step 2: get ground-station list
+    stations = get_station.get_station()
+    for station in stations:
+        lat, lon = station
+        print(lat, lon)
+
+    # step 3: get satellite list
+    satellites = get_satellite.get_satellite()
+    for satellite in satellites:
+        lat_sat, lon_sat, h_sat = satellite
+        print(lat_sat, lon_sat, h_sat)
+
+    # step 4: compute the elevation angle between satellite and ground stations
+    
+
+    # step 5: set link parameters
+    f = 22.5 * u.GHz    # link frequency
+    D = 1.2 * u.m       # antenna diameters
+    p = 0.1             # unavailability
+
+    # step 6: get weather index of ground station
     T, P, V_t, dew_2m, tr, hr = get_weather.get_weather_init(specific_date, timestamp, lat, lon)
 
-    # print(T, P , V_t)
 
-    # ########################### #
-    # test case'
 
-    # test ground-station
-    lat = 39.9
-    lon = 116.4
 
-    # test satellite
-    lat_sat = 30.5 # N o
-    lon_sat = 103.5 # E o
-    h_sat = 500 * itur.u.km # km
+
 
 
 
