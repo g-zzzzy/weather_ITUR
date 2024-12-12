@@ -47,7 +47,11 @@ if __name__ == "__main__":
         print(lat_sat, lon_sat, h_sat)
 
     # step 4: compute the elevation angle between satellite and ground stations
-    
+    el = itur.utils.elve_angle(stations, satellites)
+    print("elevation angle: ")
+    for station in stations:
+        for satellite in satellites:
+            print("station: ", station, "satellite: ", satellite, "ele_angle: ", el[(station, satellite)])
 
     # step 5: set link parameters
     f = 22.5 * u.GHz    # link frequency
@@ -56,6 +60,9 @@ if __name__ == "__main__":
 
     # step 6: get weather index of ground station
     T, P, V_t, dew_2m, tr, hr = get_weather.get_weather_init(specific_date, timestamp, lat, lon)
+
+    # step 7: compute the atmospheric attenuation
+    itur.atmospheric_attenuation.compute_atmospheric(p, )
 
 
 

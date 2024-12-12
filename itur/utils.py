@@ -458,3 +458,52 @@ def elevation_angle(h, lat_s, lon_s, lat_grid, lon_grid):
                                   2 * (RE / rs) * np.cos(gamma)))  # In radians
 
     return np.rad2deg(elevation)
+
+def elve_angle(stations, satellites):
+    """
+    stations:(lat, lon)
+        lat: float / degree
+        lon: float / degree
+    satellites:(lat, lon, h)
+        lat: float / degree
+        lon: float / degree
+        h: float / km
+    """
+    RE = 6371.0     # Radius of the Earth (km)
+
+    # 返回字典
+    elevation_dict = {}
+
+    for station in stations:
+        st_lat, st_lon = station
+        # Transform latitude_longitude values to radians
+        lat1 = np.deg2rad(st_lat)
+        lon1 = np.deg2rad(st_lon)
+
+        for satellite in satellites:
+            lat, lon, h = satellite
+            h = prepare_quantity(h, u.km, name_val='Orbital altitude of the satellite')
+            rs = RE + h
+
+            # Transform latitude_longitude values to radians
+            lat2 = np.deg2rad(lat)
+            lon2 = np.deg2rad(lon)
+
+            # Compute the elevation angle as described in
+            gamma = np.arccos(
+                np.clip(np.sin(lat2) * np.sin(lat1) +
+                        np.cos(lat1) * np.cos(lat2) * np.cos(lon2 - lon1), -1, 1))
+            elevation = np.arccos(np.sin(gamma) /
+                          np.sqrt(1 + (RE / rs)**2 -
+                                  2 * (RE / rs) * np.cos(gamma)))  # In radians
+            elev = np.rad2deg(elevation)
+            elevation_dict[(station, satellite)] = elev
+
+    return elevation_dict
+
+
+
+
+
+
+    
